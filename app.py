@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from bottle import route, run, default_app, request, response
+from bottle import route, run, default_app, request, response, post, HTTPResponse
 import json
 import requests
+
 
 @route('/health')
 def hello():
@@ -37,26 +38,18 @@ def gray():
     if message_type == 'image':
         print('image send')
         image_type = request.json['message']['contentProvider']['type']
-        if image_type = 'line':
+        if image_type == 'line':
             image_url = 'https://api.line.me/v2/bot/message/{}/content'.format(request.json['message']['id'])
         else:
             image_url = request.json['message']['contentProvider']['originalContentUrl']
         # post image url to the mask_rcnn server
-        payload = {'image_url': image_url}
+        payload = {'image_url': image_url
+                   'reply_token': request['replyToken']}
+        #mask_rcnn_server sends an image to line talk room.
         res = requests.post("http://httpbin.org/post", data=payload)
-        # how to get an binary image from res
-        # res.content
-        """
-
-        {
-            "type": "image",
-            "originalContentUrl": "https://example.com/original.jpg",
-            "previewImageUrl": "https://example.com/preview.jpg"
-        }
-        """
-        response.http = 200
+        response = HTTPResponse(status=200)
     else:
-        response.http = 400
+        response = HTTPResponse(status=500)
 
     return response
 
