@@ -6,12 +6,18 @@ import json
 import requests
 
 
-@route('/health')
+@route('/')
 def hello():
+    return 'はろー'
+
+
+@route('/health')
+def health():
     return 
 
-@post('/gray')
-def gray():
+
+@post('/blur')
+def blur():
     """
     receive json from LINE webhook and transfer image url
     to the mask_rcnn server.
@@ -34,22 +40,25 @@ def gray():
     }
     see more https://developers.line.biz/ja/reference/messaging-api/#send-reply-message
     """
-    message_type = request.json['message']['type']
-    if message_type == 'image':
-        print('image send')
-        image_type = request.json['message']['contentProvider']['type']
-        if image_type == 'line':
-            image_url = 'https://api.line.me/v2/bot/message/{}/content'.format(request.json['message']['id'])
-        else:
-            image_url = request.json['message']['contentProvider']['originalContentUrl']
-        # post image url to the mask_rcnn server
-        payload = {'image_url': image_url
-                   'reply_token': request['replyToken']}
-        #mask_rcnn_server sends an image to line talk room.
-        res = requests.post("http://httpbin.org/post", data=payload)
-        response = HTTPResponse(status=200)
-    else:
-        response = HTTPResponse(status=500)
+    print('request body', request.json)
+    events = request.json['events']
+    for event in events:
+        message_type = event['message']['type']
+        if message_type == 'image':
+            event_message = event['message']
+            image_type = event_message['contentProvider']['type']
+            if image_type == 'line':
+                image_url = 'https://api.line.me/v2/bot/message/{}/content'.format(event_message['id'])
+            else:
+                image_url = event_message['contentProvider']['originalContentUrl']
+            # post image url to the mask_rcnn server
+            payload = {'image_url': image_url,
+                    'reply_token': event['replyToken']}
+            print('request body to a mask_rcnn server', payload)
+            #mask_rcnn_server sends an image to line talk room.
+            res = requests.post('', data=payload)
+
+    response = HTTPResponse(status=200)
 
     return response
 
