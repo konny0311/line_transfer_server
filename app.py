@@ -4,6 +4,7 @@
 from bottle import route, run, default_app, request, response, post, HTTPResponse
 import json
 import requests
+import os
 
 
 @route('/')
@@ -56,7 +57,8 @@ def blur():
                     'reply_token': event['replyToken']}
             print('request body to a mask_rcnn server', payload)
             #mask_rcnn_server sends an image to line talk room.
-            res = requests.post('', data=payload)
+            headers = {'Content-Type':'application/json'}
+            res = requests.post('http://{}:8080/splash/line/blur'.format(os.getenv('GPU_PUBLIC_IP')), data=payload, headers=headers)
 
     response = HTTPResponse(status=200)
 
