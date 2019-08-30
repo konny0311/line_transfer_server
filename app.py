@@ -89,6 +89,7 @@ def blur():
         if message_type == 'text':
             text = event['message']['text']
             print(user_id, text)
+            print(type(user_id), type(text))
 
             if text == 'ぼかし':
                 process_type = ProcessType.BLUR
