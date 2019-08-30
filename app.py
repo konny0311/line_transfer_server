@@ -56,10 +56,10 @@ def blur():
     see more https://developers.line.biz/ja/reference/messaging-api/#send-reply-message
     """
     req = request.json
-    print('request body', req)
-    user_id = req['destination']
-    process_type = _get_process_type(user_id)
     events = req['events']
+    user_id = req['destination']
+    print('request body without user info', events)
+    process_type = _get_process_type(user_id)
     for event in events:
         message_type = event['message']['type']
         if message_type == 'image':
@@ -88,8 +88,6 @@ def blur():
 
         if message_type == 'text':
             text = event['message']['text']
-            print(user_id, text)
-            print(type(user_id), type(text))
 
             if text == 'ぼかし':
                 process_type = ProcessType.BLUR
