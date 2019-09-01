@@ -72,19 +72,21 @@ def blur():
             # post image url to the mask_rcnn server
             payload = {'image_url': image_url,
                     'reply_token': event['replyToken']}
-            print('request body to a mask_rcnn server', payload)
             #mask_rcnn_server sends an image to line talk room.
             headers = {'Content-Type':'application/json'}
+            mask_rcnn_endpoint = 'http://{}:8080/splash/line'.format(os.getenv('GPU_PUBLIC_IP'))
             if process_type == ProcessType.BLUR:
-                mask_rcnn_endpoint = 'http://{}:8080/splash/line/blur'.format(os.getenv('GPU_PUBLIC_IP'))
+                payload['convert_type'] = 'blur'
             elif process_type == ProcessType.GRAY:
                 # TODO
-                mask_rcnn_endpoint = 'http://{}:8080/splash/line/gray'.format(os.getenv('GPU_PUBLIC_IP'))
+                payload['convert_type'] = 'gray'
             else :
                 # TODO
-                mask_rcnn_endpoint = 'http://{}:8080/splash/line/blur_gray'.format(os.getenv('GPU_PUBLIC_IP'))
+                payload['convert_type'] = 'blur_gray'
 
+            print('request body to a mask_rcnn server', payload)
             res = requests.post(mask_rcnn_endpoint, data=payload, headers=headers)
+            print(res)
 
         if message_type == 'text':
             text = event['message']['text']
