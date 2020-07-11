@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from bottle import route, run, default_app, request, response, post, HTTPResponse
+import os
 import json
 import requests
-import os
 from enum import Enum
-import boto3
-from boto3.dynamodb.conditions import Key, Attr
-
-
-dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-1')
-table = dynamodb.Table('process_type')
+from bottle import route, run, default_app, request, response, post, HTTPResponse
 
 
 class ProcessType(Enum):
