@@ -7,8 +7,14 @@ COPY ./ /app
 WORKDIR /app
 
 RUN apt update &&\
-    apt install -y redis-server
+    apt install -y redis-server uwsgi-plugin-python3
 
 RUN pip3 install -r requirements.txt
 
-CMD ["python3"]
+# uwsgiに必要なファイル設定
+RUN mkdir /var/log/uwsgi && \
+    mkdir /var/run/uwsgi && \
+    chown www-data:www-data /var/log/uwsgi &&\
+    chown www-data:www-data /var/run/uwsgi
+
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
