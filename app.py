@@ -3,6 +3,7 @@
 
 import os
 import json
+import redis
 import requests
 from enum import Enum
 from bottle import route, run, default_app, request, response, post, HTTPResponse
@@ -14,6 +15,7 @@ class ProcessType(Enum):
     GRAY = 2
     BLUR_GRAY = 3
 
+redis_con = redis.Redis(host=os.environ['DB_PORT_6379_TCP_ADDR'], port=6379, db=0)
 
 @route('/')
 def hello():
