@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-master
+spec:
+  serviceName: "redis-master"
+  replicas: 1
+  selector:
+    matchLabels:
+        pj: line
+  template:
+    metadata:
+      labels:
+          pj: line
+    spec:
+      containers:
+      - name: master
+        image: redis:6.0.5
+        command: ["redis-server"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: userdatapath
+          mountPath: /userdata
+  volumeClaimTemplates:
+  - metadata:
+      name: userdatapath
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 0.5Gi
