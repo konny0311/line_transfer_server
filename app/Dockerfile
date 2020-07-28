@@ -15,4 +15,5 @@ RUN pip3 install -r requirements.txt
 RUN mkdir /var/log/uwsgi && \
     chown www-data:www-data /var/log/uwsgi
 
-CMD ["uwsgi", "--ini", "uwsgi.ini"]
+# CMD ["uwsgi", "--ini", "uwsgi.ini"]
+CMD ["bash"]

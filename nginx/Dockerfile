@@ -4,6 +4,7 @@ RUN rm -f /etc/nginx/conf.d/*
 RUN mkdir -p /home/user
 
 ADD nginx.conf /home/user/nginx.conf
+ADD uwsgi_params /home/user/uwsgi_params
 
 # Set Timezone
 ENV TZ Asia/Tokyo
