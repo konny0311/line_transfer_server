@@ -1,4 +1,4 @@
-bottle==0.12.17
+bottle==0.12.20
 requests==2.22.0
 uWSGI==2.0.18
 redis==3.5.3
